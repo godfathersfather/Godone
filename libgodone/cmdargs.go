@@ -7,23 +7,25 @@ import (
 
 // Struct used for command line argument parsing.
 type CmdArgs struct {
-	operation    Operation
-	name         string
-	compiler     Compiler
-	language     Language
-	target       Target
-	crossCompile bool
+	operation        Operation
+	name             string
+	compiler         Compiler
+	language         Language
+	target           Target
+	crossCompileFlag bool
+	noBuildFlag      bool
 }
 
 // Parses all command line arguments into a CmdArgs struct.
 func ParseArgs() *CmdArgs {
 	args := CmdArgs{
-		operation:    HELP,
-		name:         GetwdBaseName(),
-		compiler:     GCC,
-		language:     CPP,
-		target:       LINUX,
-		crossCompile: false,
+		operation:        HELP,
+		name:             GetwdBaseName(),
+		compiler:         GCC,
+		language:         CPP,
+		target:           LINUX,
+		crossCompileFlag: false,
+		noBuildFlag:      false,
 	}
 
 	for i := 0; i < len(os.Args); i++ {
@@ -63,18 +65,6 @@ func ParseArgs() *CmdArgs {
 			args.target = target
 			i++
 
-		case "buildrun":
-			args.operation = BUILDRUN
-			if i+1 >= len(os.Args) {
-				Die(USAGE, fmt.Sprintf("'%s' option expects an argument which wasn't provided", os.Args[i]))
-			}
-			target, err := StringAsTarget(os.Args[i+1])
-			if err != nil {
-				Die(USAGE, err.Error())
-			}
-			args.target = target
-			i++
-
 		case "clean":
 			args.operation = CLEAN
 			if i+1 >= len(os.Args) {
@@ -89,6 +79,9 @@ func ParseArgs() *CmdArgs {
 
 		case "init":
 			args.operation = INIT
+
+		case "ver", "version":
+			args.operation = VERSION
 
 		case "-c", "--comp", "--compiler":
 			if i+1 >= len(os.Args) {
@@ -113,7 +106,10 @@ func ParseArgs() *CmdArgs {
 			i++
 
 		case "-x", "--cross", "--cross-compile":
-			args.crossCompile = true
+			args.crossCompileFlag = true
+
+		case "--no-build":
+			args.noBuildFlag = true
 		}
 	}
 

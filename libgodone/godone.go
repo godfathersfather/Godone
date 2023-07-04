@@ -7,48 +7,54 @@ import (
 	"strings"
 )
 
+const GODONE_VERSION = "1.2"
+
 func Execute() {
 	args := ParseArgs()
 
 	switch args.operation {
+	case VERSION:
+		fmt.Printf("Godone %s\n", GODONE_VERSION)
+
 	case NEW, INIT:
 		InitFolder(args)
 
 	case RUN:
 		UpdateMakefileSources(args.target)
-		RunTarget(args.target)
+		if args.noBuildFlag {
+			RunTarget(args.target)
+		} else {
+			BuildRunTarget(args.target)
+		}
 
 	case BUILD:
 		UpdateMakefileSources(args.target)
 		BuildTarget(args.target)
-
-	case BUILDRUN:
-		UpdateMakefileSources(args.target)
-		BuildRunTarget(args.target)
 
 	case CLEAN:
 		UpdateMakefileSources(args.target)
 		CleanTarget(args.target)
 
 	default:
-		fmt.Println("Godone Command Line Utility By MrMadPie.")
+		fmt.Println("Godone C/C++ Project Manager By MrMadPie.")
 		fmt.Println("\nOperations:")
 		fmt.Println("help (or anything that isn't a known command) - brings up this message")
+		fmt.Println("version                                       - prints the version of Godone")
 		fmt.Println("new <project name> <flags>                    - creates a project in a new folder with name <project name> and flags <flags>")
 		fmt.Println("init <flags>                                  - creates a project in the current folder with flags <flags>")
 		fmt.Println("build <target>                                - builds for the specified target (available: Linux and Windows if you've enabled cross-compilation)")
-		fmt.Println("run <target>                                  - runs the binary of target if it exists (you must have built at least once beforehand, check build/buildrun)")
-		fmt.Println("buildrun <target>                             - does the two above one after another so that you don't have to do it yourself")
+		fmt.Println("run [optional: --no-build] <target>           - builds and runs the compiled executable unless '--no-build' is used in which case it does not build it (even if it hasn't been built, meaning it won't run)")
 		fmt.Println("clean <target>                                - removes all object files as well as the produced binary of target")
 		fmt.Println("\nFlags:")
 		fmt.Println("-c, --comp, --compiler <compiler>             - select your compiler (available: GCC, CLANG, default: GCC)")
 		fmt.Println("-l, --lang, --language <language>             - select your language (available: C, CPP, default: CPP)")
 		fmt.Println("-x, --cross, --cross-compile                  - enable cross-compilation to windows")
+		fmt.Println("--no-build                                    - disable rebuilding the executable (used with 'run')")
 	}
 }
 
 func GenerateReadMeString(projectName string) string {
-	projectVersion := "0.0.1"
+	projectVersion := "1.0"
 	projectDate := CurrentTimeAndDate()
 	projectDescription := "<Insert Project Description Here>"
 
@@ -227,7 +233,7 @@ func InitFolder(specifications *CmdArgs) {
 	helloworld.WriteString(GenerateHelloWorldString(specifications.language))
 
 	InitBuildFolder(path+"build/linux/", specifications, false)
-	if specifications.crossCompile {
+	if specifications.crossCompileFlag {
 		InitBuildFolder(path+"build/windows/", specifications, true)
 	}
 }
