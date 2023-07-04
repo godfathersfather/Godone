@@ -8,9 +8,9 @@ Also this utility is meant for Linux/MacOS/BSD users. Enjoy!
 
 # Commands
 
-![image](https://github.com/godfathersfather/Godone/assets/71591792/3ea4427a-c3d3-48a0-b431-9da7e700c036)
+![image](https://github.com/godfathersfather/Godone/assets/58998170/0cef1ba4-d4f6-42b9-b8f8-0f151756ec4f)
 
-# Contact Me
+# Contact Me!
 
 I'm mostly active on discord so if you want to discuss this project be sure to add me there. 
 @mrmadpie
