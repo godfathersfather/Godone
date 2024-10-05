@@ -13,4 +13,4 @@ Also this utility is meant for Linux/MacOS/BSD users. Enjoy!
 # Contact Me!
 
 I'm mostly active on discord so if you want to discuss this project be sure to add me there. 
-@such_are_the_words
+@tw1sted_cr0w
